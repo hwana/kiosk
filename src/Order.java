@@ -26,7 +26,7 @@ public class Order {
 
     /**
      * 장바구니 담기
-     * @param product
+     * @param product : 사용자가 선택한 상품
      */
     public void addProduct(Product product) {
         product.print();
@@ -68,6 +68,9 @@ public class Order {
         return sc.nextInt();
     }
 
+    /**
+     * 주문 취소
+     */
     public void cancelOrder(){
         System.out.println("진행중이던 주문을 취소하시겠습니까?");
         System.out.println("1. 확인      2. 취소");
