@@ -2,6 +2,7 @@ import java.util.*;
 
 public class KioskApp {
 
+    private static final String NUMBER_REG = "^[1-6]*$";
     private Map<Integer, List<Product>> allMenuMap = new HashMap<>(); // 전체 메뉴 지도
     private List<Menu> menuList = new ArrayList<>(); // 메뉴 리스트
     private List<Product> tteokbokkiList = new ArrayList<>(); // 떡볶이 리스트
@@ -10,7 +11,11 @@ public class KioskApp {
     private List<Product> mealKitList = new ArrayList<>(); // 밀키트 리스트
     Order order = new Order();
 
-    public void insertMenu(){
+    public KioskApp() {
+        insertMenu();
+    }
+
+    public void insertMenu() {
 
         //메인 메뉴
         menuList.add(new Menu("Tteokbokki", "계속 생각나는 매운맛! 엽기떡볶이🥵"));
@@ -42,41 +47,52 @@ public class KioskApp {
 
     }
 
-    public void kiosk(){
+    public void kiosk() throws Exception {
 
-        while(true){
-            int menuNum = printMenu(); //메인메뉴 출력
+        String menuNum = printMenu(); //메인메뉴 출력
+        Parser.parseNum(menuNum, NUMBER_REG);
 
-            if(menuNum == 6){ // 진행중인 주문 취소
+        switch (menuNum) {
+            case "6": // 주문 취소
                 order.cancelOrder();
-            }else if(menuNum == 5){
-                if(order.printOrderList() == 1){
+                break;
+            case "5": // 주문하기
+                if ("1".equals(order.orderCheck())) {
                     int waitingNum = order.getWaitingNum();
 
                     System.out.println("주문이 완료되었습니다.");
                     System.out.println("대기번호는 [" + waitingNum + " ]번 입니다.");
                     System.out.println("(3초 후 메뉴판으로 돌아갑니다.)");
+
+                    //다음 주문을 위한 주문번호 세팅과 장바구니 초기화
                     order.setWaitingNum(waitingNum + 1);
+                    order.getOrderList().clear();
+                    order.setTotalPrice(0);
 
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+                } else {
+                    System.out.println("주문하지 않고 메뉴판으로 돌아갑니다.");
                 }
-            }else{
-                int productNum = printMenu(menuNum); // 입력받은 숫자에 따른 상세 메뉴 출력
-                Product selectProduct = allMenuMap.get(menuNum).get(productNum-1); //선택한 상품에 대한 정보 가져오기
+                break;
+            case "0": // 관리자 모드
+                printAdmin();
+                break;
+            default: // 메뉴 선택
+                String productNum = printMenu(menuNum); // 입력받은 숫자에 따른 상세 메뉴 출력
+                Product selectProduct = allMenuMap.get(Integer.parseInt(menuNum)).get(Integer.parseInt(productNum) - 1); //선택한 상품에 대한 정보 가져오기
 
                 order.addProduct(selectProduct); // 카트에 담기
-            }
         }
     }
 
     /**
      * 메인 메뉴 출력
      */
-    public int printMenu(){
+    public String printMenu() {
 
         System.out.println("🧡 엽기떡볶이에 오신걸 환영합니다. 🧡");
         System.out.println("아래 메뉴판을 보시고 메뉴를 골라 입력해주세요.");
@@ -84,33 +100,33 @@ public class KioskApp {
 
         System.out.println("[ 🔥 YUPDDUCK MENU 🔥 ]");
         int index = 1;
-        for(Menu m : menuList){
-            System.out.print(index++ +". ");
+        for (Menu m : menuList) {
+            System.out.print(index++ + ". ");
             m.print();
         }
 
         System.out.println("[ 💛 ORDER MENU 💛 ]");
-        System.out.print(index++ +". ");
+        System.out.print(index++ + ". ");
         System.out.printf("%-15s | %s%n", "Order", "장바구니를 확인 후 주문합니다.⭕");
-        System.out.print(index +". ");
+        System.out.print(index + ". ");
         System.out.printf("%-15s | %s%n", "Cancel", "진행중인 주문을 취소합니다.❌");
         System.out.println();
 
         Scanner sc = new Scanner(System.in);
-        return sc.nextInt();
+        return sc.nextLine();
     }
 
     /**
      * 상세 메뉴 출력
      */
-    public int printMenu(int selectNum) {
+    public String printMenu(String selectNum) {
         String menu = "TTEOKBOKKI";
         int index = 1;
-        if(selectNum == 2){
+        if ("2".equals(selectNum)) {
             menu = "SIDE";
-        }else if(selectNum == 3){
+        } else if ("3".equals(selectNum)) {
             menu = "DRINK";
-        }else if(selectNum == 4){
+        } else if ("4".equals(selectNum)) {
             menu = "MEAL KIT";
         }
 
@@ -118,15 +134,27 @@ public class KioskApp {
         System.out.println("아래 상품메뉴판을 보시고 상품을 골라 입력해주세요.");
         System.out.println();
 
-        System.out.println("[ 🔥 "+ menu + " MENU 🔥 ]");
+        System.out.println("[ 🔥 " + menu + " MENU 🔥 ]");
         //메뉴 리스트 출력
-        for(Product p : allMenuMap.get(selectNum)){
-            System.out.print(index++ +". ");
+        for (Product p : allMenuMap.get(Integer.parseInt(selectNum))) {
+            System.out.print(index++ + ". ");
             p.print();
         }
         System.out.println();
 
         Scanner sc = new Scanner(System.in);
-        return sc.nextInt();
+        return sc.nextLine();
+    }
+
+    public void printAdmin() {
+        System.out.println("[ 총 판매금액 현황 ]");
+        System.out.println("현재까지 총 판매된 금액은 [ ₩ " + order.getAllTotalPrice() + " ] 입니다.");
+
+        System.out.println("[ 총 판매상품 목록 현황 ]");
+        System.out.println("현재까지 총 판매된 상품 목록은 아래와 같습니다.");
+
+        for (String name : order.getAllOrderList().keySet()) {
+            System.out.println("- " + name + " | ₩ " + order.getAllOrderList().get(name));
+        }
     }
 }

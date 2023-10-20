@@ -1,8 +1,13 @@
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         KioskApp app = new KioskApp();
-        app.insertMenu();
-        app.kiosk();
+        while (true) {
+            try {
+                app.kiosk();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 }
