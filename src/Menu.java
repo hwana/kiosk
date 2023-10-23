@@ -16,7 +16,7 @@ public class Menu {
         return description;
     }
 
-    public void print(){
-        System.out.printf("%-15s | %s%n",  getName(), getDescription());
+    public void print() {
+        System.out.printf("%-15s | %s%n", getName(), getDescription());
     }
 }

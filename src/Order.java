@@ -147,7 +147,7 @@ public class Order {
                     if (maxCount == 1) {
                         product.print();    //개수 출력하지 않음
                     } else {
-                        product.countPrint(orderList.get(product));  //1개가 아니라면 개수 출력
+                        product.print(orderList.get(product));  //1개가 아니라면 개수 출력
                     }
 
                     setTotalPrice(product);         //주문 건 별 총 금액 구하기

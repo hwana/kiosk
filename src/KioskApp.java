@@ -2,7 +2,7 @@ import java.util.*;
 
 public class KioskApp {
 
-    private static final String NUMBER_REG = "^[1-6]*$";
+    private static final String NUMBER_REG = "^[0-6]*$";
     private Map<Integer, List<Product>> allMenuMap = new HashMap<>(); // 전체 메뉴 지도
     private List<Menu> menuList = new ArrayList<>(); // 메뉴 리스트
     private List<Product> tteokbokkiList = new ArrayList<>(); // 떡볶이 리스트
@@ -83,6 +83,7 @@ public class KioskApp {
                 break;
             default: // 메뉴 선택
                 String productNum = printMenu(menuNum); // 입력받은 숫자에 따른 상세 메뉴 출력
+                Parser.parseNum(productNum, NUMBER_REG);
                 Product selectProduct = allMenuMap.get(Integer.parseInt(menuNum)).get(Integer.parseInt(productNum) - 1); //선택한 상품에 대한 정보 가져오기
 
                 order.addProduct(selectProduct); // 카트에 담기
