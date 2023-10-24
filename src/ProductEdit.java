@@ -44,8 +44,12 @@ public class ProductEdit {
         allMenuMap.put(4, mealKitList);
     }
 
-    public String getAddmenu() {
-        return addmenu;
+    public Map<Integer, List<Product>> getallMenuMap(){
+        return allMenuMap;
+    }
+
+    public List<Menu> getmenuList(){
+        return menuList;
     }
 
     public String getName() {
@@ -60,14 +64,15 @@ public class ProductEdit {
         return price;
     }
 
-    public void addProduct(String addmenu,Product product ){
-        for (Menu i : menuList){
-            if (Objects.equals(addmenu, i)){
-
-            }
-        }
-
-    }
+//    public void addProduct(String addmenu,Product product ){
+//    for (Menu i : menuList.get().getName()){
+//            if (Objects.equals(addmenu, i)){
+//                i
+//
+//            }
+//        }
+//
+//    }
 
 
 
