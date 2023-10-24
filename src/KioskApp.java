@@ -18,7 +18,7 @@ public class KioskApp {
     public void insertMenu() {
 
         //메인 메뉴
-        menuList.add(new Menu("Tteokbokki", "계속 생각나는 매운맛! 엽기떡볶이🥵"));
+        menuList.add(new Menu("Tteokbokki", "계속 생각나는 매운맛! 엽기 떡볶이🥵"));
         menuList.add(new Menu("Side", "엽떡과 같이 먹으면 더 맛있어요🍙"));
         menuList.add(new Menu("Drinks", "매움을 달래주기 위한 음료🧃"));
         menuList.add(new Menu("Meal Kit", "어디서든 엽떡을 즐겨보세요🌳"));
