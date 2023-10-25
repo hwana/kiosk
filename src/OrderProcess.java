@@ -17,10 +17,6 @@ public class OrderProcess {
         return allOrderMap;
     }
 
-    public void setAllOrderMap(Map<String, Integer> allOrderMap) {
-        this.allOrderMap = allOrderMap;
-    }
-
     public int getAllTotalPrice() {
         return allTotalPrice;
     }
@@ -36,9 +32,26 @@ public class OrderProcess {
      */
     public void addProduct(Product product) throws Exception {
         product.print();    //선택한 메뉴 출력
-        String result = printQuestion("addProduct");    // 위 메뉴를 장바구니에 추가하시겠습니까?
+        String addProduct = printQuestion("addProduct");    // 위 메뉴를 장바구니에 추가하시겠습니까?
 
-        if ("1".equals(result)) {
+        if ("1".equals(addProduct)) {
+            String writeRequest = printQuestion("writeRequest");
+
+            //요청 사항 입력 여부 확인
+            if ("1".equals(writeRequest)) {
+                //요청사항이 조건에 맞을 때까지
+                while (true) {
+                    System.out.println("요청 사항을 20자 이하로 입력해 주세요.");
+                    Scanner sc = new Scanner(System.in);
+                    String request = sc.nextLine();
+
+                    if (checkRequestLength(request)) {
+                        order.setRequest(request);
+                        break;
+                    }
+                }
+            }
+
             //주문 목록에 상품 담기
             order.getOrderMap().put(product, order.getOrderMap().getOrDefault(product, 0) + 1);
             //주문 총 금액 더하기
@@ -47,6 +60,16 @@ public class OrderProcess {
         } else {
             System.out.println("❗ 취소되었습니다. ❗");
         }
+    }
+
+    /**
+     * 요청사항 길이 확인
+     *
+     * @param request : 입력 받은 요청 사항
+     * @return : true : 조건 충족, false : 조건 불충족
+     */
+    public boolean checkRequestLength(String request) {
+        return request.length() <= 20;
     }
 
     /**
@@ -118,6 +141,11 @@ public class OrderProcess {
         String result = "";
 
         switch (type) {
+            case "writeRequest": //요청사항 작성
+                System.out.println("요청 사항을 입력하시겠습니까?");
+                System.out.println("1. 확인      2. 취소");
+                result = sc.nextLine();
+                break;
             case "addProduct":  //장바구니 담기
                 System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
                 System.out.println("1. 확인      2. 취소");
