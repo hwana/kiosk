@@ -2,13 +2,14 @@ import java.util.*;
 
 public class KioskApp {
 
-    private static final String NUMBER_REG = "^[0-6]*$";
+    private static final String NUMBER_REG = "^[0-7]*$";
     private Map<Integer, List<Product>> allMenuMap = new HashMap<>(); // 전체 메뉴 지도
     private List<Menu> menuList = new ArrayList<>(); // 메뉴 리스트
     private List<Product> tteokbokkiList = new ArrayList<>(); // 떡볶이 리스트
     private List<Product> sideList = new ArrayList<>(); // 사이드 메뉴 리스트
     private List<Product> drinkList = new ArrayList<>(); // 음료 리스트
     private List<Product> mealKitList = new ArrayList<>(); // 밀키트 리스트
+    OrderProcess orderProcess = new OrderProcess();
     Order order = new Order();
 
     public KioskApp() {
@@ -54,39 +55,41 @@ public class KioskApp {
 
         switch (menuNum) {
             case "6": // 주문 취소
-                order.cancelOrder();
+                orderProcess.cancelOrder();
                 break;
             case "5": // 주문하기
-                if ("1".equals(order.orderCheck())) {
-                    int waitingNum = order.getWaitingNum();
-
-                    System.out.println("주문이 완료되었습니다.");
-                    System.out.println("대기번호는 [" + waitingNum + " ]번 입니다.");
-                    System.out.println("(3초 후 메뉴판으로 돌아갑니다.)");
-
-                    //다음 주문을 위한 주문번호 세팅과 장바구니 초기화
-                    order.setWaitingNum(waitingNum + 1);
-                    order.getOrderList().clear();
-                    order.setTotalPrice(0);
+                String result = orderProcess.orderCheck();  //주문을 확인 후 주문(1)하거나 취소(2)한 결과
+                if ("1".equals(result)) {
+                    orderProcess.orderSuccess();    //
 
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+
                 } else {
                     System.out.println("주문하지 않고 메뉴판으로 돌아갑니다.");
                 }
                 break;
-            case "0": // 관리자 모드
+            case "0":
                 printAdmin();
                 break;
+
+            case "7": // 주문 확인
+
+                recentOrder();
+                System.out.println("[ 대기 중인 주문 목록 ]");
+                orderProcess.waitCheck();
+
+                break;
+
             default: // 메뉴 선택
                 String productNum = printMenu(menuNum); // 입력받은 숫자에 따른 상세 메뉴 출력
                 Parser.parseNum(productNum, NUMBER_REG);
                 Product selectProduct = allMenuMap.get(Integer.parseInt(menuNum)).get(Integer.parseInt(productNum) - 1); //선택한 상품에 대한 정보 가져오기
 
-                order.addProduct(selectProduct); // 카트에 담기
+                orderProcess.addProduct(selectProduct); // 카트에 담기
         }
     }
 
@@ -109,8 +112,10 @@ public class KioskApp {
         System.out.println("[ 💛 ORDER MENU 💛 ]");
         System.out.print(index++ + ". ");
         System.out.printf("%-15s | %s%n", "Order", "장바구니를 확인 후 주문합니다.⭕");
-        System.out.print(index + ". ");
+        System.out.print(index++ + ". ");
         System.out.printf("%-15s | %s%n", "Cancel", "진행중인 주문을 취소합니다.❌");
+        System.out.print(index + ". ");
+        System.out.printf("%-15s | %s%n", "Check", "진행중인 주문을 확인합니다.✔");
         System.out.println();
 
         Scanner sc = new Scanner(System.in);
@@ -149,13 +154,44 @@ public class KioskApp {
 
     public void printAdmin() {
         System.out.println("[ 총 판매금액 현황 ]");
-        System.out.println("현재까지 총 판매된 금액은 [ ₩ " + order.getAllTotalPrice() + " ] 입니다.");
+        System.out.println("현재까지 총 판매된 금액은 [ ₩ " + orderProcess.getAllTotalPrice() + " ] 입니다.");
 
         System.out.println("[ 총 판매상품 목록 현황 ]");
         System.out.println("현재까지 총 판매된 상품 목록은 아래와 같습니다.");
 
-        for (String name : order.getAllOrderList().keySet()) {
-            System.out.println("- " + name + " | ₩ " + order.getAllOrderList().get(name));
+        for (String name : orderProcess.getAllOrderMap().keySet()) {
+            System.out.println("- " + name + " | ₩ " + orderProcess.getAllOrderMap().get(name));
         }
+    }
+    public void recentOrder() {
+
+        System.out.println("[ 최근 주문 완료 목록 ]");
+
+        for (String name : orderProcess.getAllOrderMap().keySet()) {
+            System.out.println(name +  "           | ₩ " + orderProcess.getAllOrderMap().get(name));
+        }
+
+    }
+
+    public void adminWaiting() {
+        //if(order.getStatus()) 이 false인 경우
+        System.out.println("[ 대기주문 목록 ]");
+        for (String name : orderProcess.getAllOrderMap().keySet()) {
+            System.out.println("- " + name + " | ₩ " + orderProcess.getAllOrderMap().get(name));
+        }
+
+    }
+    public void adminFinish() {
+        //if(order.getStatus()) 이 true인 경우
+        System.out.println("[ 완료주문 목록 ]");
+
+    }
+    public void adminCreateItem() {
+        System.out.println("[ 상품생성 ]");
+
+    }
+    public void adminDeleteItem() {
+        System.out.println("[ 상품삭제 ]");
+
     }
 }
