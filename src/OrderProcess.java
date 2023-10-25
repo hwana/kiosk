@@ -171,7 +171,8 @@ public class OrderProcess {
                         product.print(order.getOrderMap().get(product));  //1개가 아니라면 개수 출력
                     }
                 }
-
+                System.out.println("[ 주문 요청사항 ]");
+                System.out.println(order.getRequest());
                 System.out.println("[ Total Price ]");
                 System.out.println(order.getTotalPrice());
 
