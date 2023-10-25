@@ -7,6 +7,7 @@ public class Main {
                 app.kiosk();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+
             }
         }
     }
