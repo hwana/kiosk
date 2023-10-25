@@ -64,15 +64,15 @@ public class ProductEdit {
         return price;
     }
 
-//    public void addProduct(String addmenu,Product product ){
-//    for (Menu i : menuList.get().getName()){
-//            if (Objects.equals(addmenu, i)){
-//                i
-//
-//            }
-//        }
-//
-//    }
+    public void addProduct(String addmenu,Product product ){
+    for (Menu i : menuList.get().getName()){
+            if (Objects.equals(addmenu, i)){
+                i
+
+            }
+        }
+
+    }
 
 
 
