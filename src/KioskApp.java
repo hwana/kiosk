@@ -151,4 +151,26 @@ public class KioskApp {
             System.out.println("- " + name + " | ₩ " + orderProcess.getAllOrderMap().get(name));
         }
     }
+
+    public void adminWaiting() {
+        //if(order.getStatus()) 이 false인 경우
+        System.out.println("[ 대기주문 목록 ]");
+        for (String name : orderProcess.getAllOrderMap().keySet()) {
+            System.out.println("- " + name + " | ₩ " + orderProcess.getAllOrderMap().get(name));
+        }
+
+    }
+    public void adminFinish() {
+        //if(order.getStatus()) 이 true인 경우
+        System.out.println("[ 완료주문 목록 ]");
+
+    }
+    public void adminCreateItem() {
+        System.out.println("[ 상품생성 ]");
+
+    }
+    public void adminDeleteItem() {
+        System.out.println("[ 상품삭제 ]");
+
+    }
 }
