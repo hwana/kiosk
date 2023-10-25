@@ -19,14 +19,11 @@ public class Order {
         this.orderMap = new HashMap<>();
         this.totalPrice = 0;
         this.waitingNumber = 0;
+        this.status = false;
     }
 
     public Map<Product, Integer> getOrderMap() {
         return orderMap;
-    }
-
-    public void setOrderMap(Map<Product, Integer> orderMap) {
-        this.orderMap = orderMap;
     }
 
     public int getTotalPrice() {
@@ -48,6 +45,19 @@ public class Order {
     public int getWaitingNumber() {
         waitingNumber++;
         return waitingNumber;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    /**
+     * 주문 완료 처리
+     *
+     * @param status : 현재 주문 처리 상태
+     */
+    public void switchStatus(boolean status) {
+        this.status = !status;
     }
 
     /**
