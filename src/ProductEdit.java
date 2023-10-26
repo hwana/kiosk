@@ -1,8 +1,6 @@
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.IntStream;
+
 
 public class ProductEdit {
     private String name;
@@ -29,7 +27,7 @@ public class ProductEdit {
 //    private List<Product> mealKitList = new ArrayList<>(); // 밀키트 리스트
     // 메뉴id#상품id
     public void initProduct() {
-        ///  메뉴는 4/4 자리로 잘라 앞 4자리는 메뉴 ,  뒤 4자리는 상품  으로 구분   메뉴들은 뒤 4자리가 일괄적으로 0000
+        ///  ID범례: 메뉴는 문자열 1,2,3,.... 순으로 ID부여,  상품은 메뉴ID#1,2,3.....순으로 부여
         menuList.put("1", new Menu("떡볶이", "계속 생각나는 매운맛! 엽기떡볶이🥵"));
         menuList.put("2", new Menu("사이드", "엽떡과 같이 먹으면 더 맛있어요🍙"));                                 //이름을 키값으로
         menuList.put("3", new Menu("드링크", "매움을 달래주기 위한 음료🧃"));
@@ -50,7 +48,6 @@ public class ProductEdit {
 
         productList.put("4#1", new Product("오리지널맛", "엽떡을 즐길줄 안다면 역시 오리지널!", 15000));
         productList.put("4#2", new Product("착한맛", "아이들이 먹기 좋아요", 15000));
-
 
 //        menuList.add(new Menu("00010000", "떡볶이", "계속 생각나는 매운맛! 엽기떡볶이🥵"));
 //        menuList.add(new Menu("00020000", "사이드", "엽떡과 같이 먹으면 더 맛있어요🍙"));
@@ -81,9 +78,7 @@ public class ProductEdit {
 
     }
 
-    public void Productwindow() {
 
-    }
 
     public Map<String, Product> getProductList() {
         return productList;
@@ -92,7 +87,6 @@ public class ProductEdit {
     public Map<String, Menu> getmenuList() {
         return menuList;
     }
-
 
 
 
@@ -127,13 +121,8 @@ public class ProductEdit {
         productList.put((menuList.size() + 1) + "#" + "1", new Product(name, description, price));
         }
 
-        for (Menu i : menuList.values()) {
-            System.out.println(i.getName());
-        }
-        for (Product i : productList.values()) {
-            System.out.println(i.getName());
-        }
-    }
 
+
+    }
 
 }

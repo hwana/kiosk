@@ -4,7 +4,7 @@ import java.util.*;
 public class KioskApp {
 
     private static final String NUMBER_REG = "^[0-6]*$";
-//    private Map<Integer, List<Product>> allMenuMap = new HashMap<>(); // 전체 메뉴 지도        //초기데이터 및 추가 삭제 관련데이터 ProductEdit으로 이관
+    //    private Map<Integer, List<Product>> allMenuMap = new HashMap<>(); // 전체 메뉴 지도        //초기데이터 및 추가 삭제 관련데이터 ProductEdit으로 이관
 //    private List<Menu> menuList = new ArrayList<>(); // 메뉴 리스트
 //    private List<Product> tteokbokkiList = new ArrayList<>(); // 떡볶이 리스트
 //    private List<Product> sideList = new ArrayList<>(); // 사이드 메뉴 리스트
@@ -82,7 +82,7 @@ public class KioskApp {
             default: // 메뉴 선택
                 String productNum = printMenu(menuNum); // 입력받은 숫자에 따른 상세 메뉴 출력
                 Parser.parseNum(productNum, NUMBER_REG);
-                Product selectProduct = productEdit.getProductList().get(Integer.parseInt(menuNum) +"#"+(Integer.parseInt(productNum))); //선택한 상품에 대한 정보 가져오기
+                Product selectProduct = productEdit.getProductList().get(Integer.parseInt(menuNum) + "#" + (Integer.parseInt(productNum))); //선택한 상품에 대한 정보 가져오기
 
                 orderProcess.addProduct(selectProduct); // 카트에 담기
         }
@@ -137,7 +137,7 @@ public class KioskApp {
 //        메뉴 리스트 출력
 //         해당 메뉴ID가 일치하는 상품만 출력
         for (String key : productEdit.getProductList().keySet()) {
-            if (Objects.equals(key.substring(0, key.indexOf("#")) , selectNum)) {
+            if (Objects.equals(key.substring(0, key.indexOf("#")), selectNum)) {
 
                 System.out.print(index++ + ". ");
                 productEdit.getProductList().get(key).print();
@@ -170,23 +170,28 @@ public class KioskApp {
         }
 
     }
+
     public void adminFinish() {
         //if(order.getStatus()) 이 true인 경우
         System.out.println("[ 완료주문 목록 ]");
 
     }
+
     public void adminCreateItem() {
         System.out.println("[ 상품생성 ]");
 
     }
+
     public void adminDeleteItem() {
         System.out.println("[ 상품삭제 ]");
 
     }
-    public void printAddProduct(){
+
+    public void printAddProduct() {
+        // 상품생성 window
         System.out.println("[상품 생성]");
         System.out.println("추가하실려는 상품의 메뉴, 이름, 설명, 가격을 입력해주세요");
-        System.out.println("예시 :      피자, 하와이안피자, 파인애플이 들어간 피자, 7000  ");
+        System.out.println("예시 :     피자, 하와이안피자, 파인애플이 들어간 피자, 7000  ");
         System.out.println();
 
         Scanner sc = new Scanner(System.in);
@@ -198,9 +203,12 @@ public class KioskApp {
 
         productEdit.addProduct(addmenu, name, description, price);
 
-
-
+        //정상 추가확인용도
+        for (Menu i : productEdit.getmenuList().values()) {
+            System.out.print(i.getName()+" ");
+        }
+        for (Product i : productEdit.getProductList().values()) {
+            System.out.print(i.getName()+" ");
+        }
     }
-
-
 }
