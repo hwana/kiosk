@@ -76,11 +76,10 @@ public class OrderProcess {
      * 주문 취소
      */
     public void cancelOrder() throws Exception {
-        String result = printQuestion("cancelOrder");
-        // result = printQuestion의 case: "cancleOrder" -> 진행중이던 주문을 취소하시겠습니까?
+        String result = printQuestion("cancelOrder");   // 진행중이던 주문을 취소하시겠습니까?
 
-        if ("1".equals(result)) { // String result가 "1" 이면
-            resetOrder(); // 주문 취소
+        if ("1".equals(result)) {
+            resetOrder();
             System.out.println("진행중이던 주문이 취소되었습니다.");
         }
     }
@@ -91,11 +90,12 @@ public class OrderProcess {
      * @return : (1) 확인 / (2) 취소
      */
     public String orderCheck() throws Exception {
-        if (order.getOrderMap().isEmpty()) { // Order 클래스의 getOrderMap(주문목록)이 비었을 경우
+        if (order.getOrderMap().isEmpty()) {
             System.out.println("장바구니에 담긴 상품이 없습니다.");
             return "";
         }
-        return printQuestion("printOrder"); // 주문 목록이 비어있지 않은 경우 case: "printOrder"
+
+        return printQuestion("printOrder"); // 아래와 같이 주문하시겠습니까?
     }
 
     public String waitingCheck() throws Exception {
@@ -159,6 +159,7 @@ public class OrderProcess {
         String result = "";
 //장바구니에 동일한 품목이 2개이상일때만 개수 표현을 하기 위해서 최대값을 구함
         int maxCount = order.getOrderMap().values().stream().max(Integer::compareTo).orElse(1);
+
         switch (type) {
             case "writeRequest": //요청사항 작성
                 System.out.println("요청 사항을 입력하시겠습니까?");
@@ -173,27 +174,28 @@ public class OrderProcess {
             case "cancelOrder": //주문 취소
                 System.out.println("진행중이던 주문을 취소하시겠습니까?");
                 System.out.println("1. 확인      2. 취소");
-                result = sc.nextLine(); // result = sc.nextLine() ?? "1" or "2"
+                result = sc.nextLine();
                 break;
-
             case "printOrder":
                 System.out.println("아래와 같이 주문하시겠습니까?");
                 System.out.println("[ Orders ]");
-                for (Product product : order.getOrderMap().keySet()) { // 전체 장바구니 목록을 product
-                    if (maxCount == 1) {    // 장바구니에 각 품목이 한개씩만 담겼다면
-                        product.print();    // 개수 출력하지 않음 n,d,p
+
+                for (Product product : order.getOrderMap().keySet()) {
+                    //장바구니에 각 품목이 한개씩만 담겼다면
+                    if (maxCount == 1) {
+                        product.print();    //개수 출력하지 않음
                     } else {
-                        product.print(order.getOrderMap().get(product));  // 개수 출력 : print(int ?) 메서드 n,d,c,p
+                        product.print(order.getOrderMap().get(product));  //1개가 아니라면 개수 출력
                     }
                 }
                 System.out.println("[ 주문 요청사항 ]");
                 System.out.println(order.getRequest());
                 System.out.println("[ Total Price ]");
-                System.out.println(order.getTotalPrice()); // Order의 getTotalPrice
+                System.out.println(order.getTotalPrice());
 
                 System.out.println("1. 주문     2. 메뉴판");
                 result = sc.nextLine();
-                break;
+
             case "waiting":
                 for (Product product : order.getOrderMap().keySet()) {
                     if (maxCount == 1) {
@@ -208,17 +210,8 @@ public class OrderProcess {
                     System.out.println(name + "           | ₩ " + getAllOrderMap().get(name));
                 }
                 break;
-
-
-          /*  case "finish":
-                for (String name : getAllOrderMap().keySet()) {
-                    System.out.println(name + "           | ₩ " + getAllOrderMap().get(name));
-
-                }break; */
-
-
         }
         Parser.parseNum(result, YES_OR_NO);
-        return result; // "1" or "2"
+        return result;
     }
 }
