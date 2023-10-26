@@ -4,8 +4,6 @@ import java.util.*;
 
 public class ProductEdit {
 
-    private String id;
-
     private String setKey;
 
     private List<Integer> keys = new ArrayList<>();
@@ -18,10 +16,10 @@ public class ProductEdit {
     // 메뉴id#상품id
     public void initProduct() {
         ///  ID범례: 메뉴는 문자열 1,2,3,.... 순으로 ID부여,  상품은 메뉴ID#1,2,3.....순으로 부여
-        menuList.put("1", new Menu("Tteokbokki", "계속 생각나는 매운맛! 엽기떡볶이🥵"));
-        menuList.put("2", new Menu("Side", "엽떡과 같이 먹으면 더 맛있어요🍙"));                                 //이름을 키값으로
-        menuList.put("3", new Menu("Drinks", "매움을 달래주기 위한 음료🧃"));
-        menuList.put("4", new Menu("Meal Kit", "어디서든 엽떡을 즐겨보세요🌳"));
+        menuList.put("1", new Menu("떡볶이", "계속 생각나는 매운맛! 엽기떡볶이🥵"));
+        menuList.put("2", new Menu("사이드", "엽떡과 같이 먹으면 더 맛있어요🍙"));                                 //이름을 키값으로
+        menuList.put("3", new Menu("드링크", "매움을 달래주기 위한 음료🧃"));
+        menuList.put("4", new Menu("밀키트", "어디서든 엽떡을 즐겨보세요🌳"));
 
         productList.put("1#1", new Product("엽기떡볶이", "엽떡을 즐길줄 안다면 역시 오리지널!", 14000));
         productList.put("1#2", new Product("짜장떡볶이", "아이들이 먹기 좋아요", 16000));
@@ -42,7 +40,7 @@ public class ProductEdit {
 
         // test code
 
-//        addProduct("Tteokbokki","엽떡", "엽떡이다", 8000);
+//        addProduct("떡볶이","엽떡", "엽떡이다", 8000);
 //        addProduct("햄버거","불고기햄버거", "맛있는햄버거", 7000);
 //        for (Menu i : menuList.values()) {
 //            System.out.print(i.getName()+" ");
@@ -120,35 +118,37 @@ public class ProductEdit {
                 }
             }
 
-            Integer maxKeys = Collections.max(keys);  // 정수화된 상품ID중 최대값 구하기
+            Integer maxKeys = Collections.max(keys);  // 상품ID중 최대값 구하기
             keys.clear();
             productList.put(setKey + "#" + (maxKeys+1), new Product(name, description, price));
 
         } else {   //새로운 메뉴 추가시 메뉴리스트와 상품생성
-        menuList.put(Integer.toString((menuList.size()+1)), new Menu(addmenu, ""));        //새로운 상품 추가시 메뉴설명을 추가하지않았기때문에  공란처리함
-        productList.put((menuList.size() + 1) + "#" + "1", new Product(name, description, price));
+            productList.put((menuList.size() + 1) + "#1", new Product(name, description, price));
+            menuList.put(Integer.toString((menuList.size()+1)), new Menu(addmenu, ""));        //새로운 상품 추가시 메뉴설명을 추가하지않았기때문에  공란처리함
+
 
         }
 
     }
 
-    public void deleteProduct(String id){   //미완성
+    public void deleteProduct(String id){
         productList.remove(id);
         String idKey = id.substring(0, id.indexOf("#"));          //삭제 상품의 메뉴ID
+        Boolean exist = false;
 
-
-        for (String K : productList.keySet()){
+        for (String K : productList.keySet()) {
             String matchKey = K.substring(0, K.indexOf("#"));     // 전 상품의 메뉴ID
-            System.out.println(idKey);
-            System.out.println(matchKey);
-            System.out.println(idKey==matchKey);
 
-//            if (!(Objects.equals(idKey,matchKey))){               // 삭제상품과 전 상품의 메뉴ID가 같은게없으면 메뉴리스트삭제
-//                System.out.println(idKey +"--"+ matchKey);
-//                menuList.remove(idKey);
-//
-//            }
+            if (Objects.equals(idKey, matchKey)) {
+                exist = true;
+                break;
+            }
         }
+
+        if (exist == false){                               // 삭제상품과 전 상품의 메뉴ID가 같은게없으면 메뉴리스트삭제
+            menuList.remove(idKey);
+        }
+
 
     }
 
