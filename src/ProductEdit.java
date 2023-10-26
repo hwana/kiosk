@@ -5,7 +5,7 @@ import java.util.*;
 public class ProductEdit {
 
     private String id;
-    private Menu setValue = null;
+
     private String setKey;
 
     private List<Integer> keys = new ArrayList<>();
@@ -39,6 +39,50 @@ public class ProductEdit {
         productList.put("4#1", new Product("오리지널맛", "엽떡을 즐길줄 안다면 역시 오리지널!", 15000));
         productList.put("4#2", new Product("착한맛", "아이들이 먹기 좋아요", 15000));
 
+        addProduct("Tteokbokki","엽떡", "엽떡이다", 8000);
+        addProduct("햄버거","불고기햄버거", "맛있는햄버거", 7000);
+
+
+        // test code
+//        for (Menu i : menuList.values()) {
+//            System.out.print(i.getName()+" ");
+//        }
+//        System.out.println();
+//
+//        for (Product i :productList.values()) {
+//            System.out.print(i.getName() + " ");
+//        }
+//        System.out.println();
+//
+//
+//        System.out.println(productList.size());
+//        System.out.println(menuList.size());
+//
+//        System.out.println("--------------------------------------");
+//
+//
+//        deleteProduct("1#1");
+//
+//        for (Menu i : menuList.values()) {
+//            System.out.print(i.getName()+" ");
+//        }
+//        System.out.println();
+//        for (Product i :productList.values()) {
+//            System.out.print(i.getName() + " ");
+//        }
+//        System.out.println();
+//
+//        System.out.println("--------------------------------------");
+//        deleteProduct("5#1");
+//
+//        for (Menu i : menuList.values()) {
+//            System.out.print(i.getName()+" ");
+//        }
+//        System.out.println();
+//        for (Product i :productList.values()) {
+//            System.out.print(i.getName() + " ");
+//        }
+
     }
 
 
@@ -54,6 +98,7 @@ public class ProductEdit {
 
 
     public void addProduct(String addmenu, String name, String description, int price) {
+        Menu setValue = null;
 
         for (Menu value : menuList.values()) {
             if (Objects.equals(addmenu, value.getName())) {     ///추가 메뉴의 이름이 기존 메뉴목록의 메뉴와 일치된 값 저장
@@ -76,23 +121,33 @@ public class ProductEdit {
             }
 
             Integer maxKeys = Collections.max(keys);  // 정수화된 상품ID중 최대값 구하기
-            productList.put(setKey + "#" + (maxKeys + 1), new Product(name, description, price));
+            keys.clear();
+            productList.put(setKey + "#" + (maxKeys+1), new Product(name, description, price));
 
         } else {   //새로운 메뉴 추가시 메뉴리스트와 상품생성
-        menuList.put(Integer.toString(menuList.size() + 1), new Menu(addmenu, ""));        //새로운 상품 추가시 메뉴설명을 추가하지않았기때문에  공란처리함
+        menuList.put(Integer.toString((menuList.size()+1)), new Menu(addmenu, ""));        //새로운 상품 추가시 메뉴설명을 추가하지않았기때문에  공란처리함
         productList.put((menuList.size() + 1) + "#" + "1", new Product(name, description, price));
+
         }
 
     }
 
-    public void deleteProduct(String id){
+    public void deleteProduct(String id){   //미완성
         productList.remove(id);
         String idKey = id.substring(0, id.indexOf("#"));          //삭제 상품의 메뉴ID
+
+
         for (String K : productList.keySet()){
             String matchKey = K.substring(0, K.indexOf("#"));     // 전 상품의 메뉴ID
-            if (!Objects.equals(idKey, matchKey)){               // 삭제상품과 전 상품의 메뉴ID가 같은게없으면 메뉴리스트삭제
-                menuList.remove(idKey);
-            }
+            System.out.println(idKey);
+            System.out.println(matchKey);
+            System.out.println(idKey==matchKey);
+
+//            if (!(Objects.equals(idKey,matchKey))){               // 삭제상품과 전 상품의 메뉴ID가 같은게없으면 메뉴리스트삭제
+//                System.out.println(idKey +"--"+ matchKey);
+//                menuList.remove(idKey);
+//
+//            }
         }
 
     }

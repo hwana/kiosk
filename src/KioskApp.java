@@ -1,4 +1,4 @@
-import java.security.Key;
+
 import java.util.*;
 
 public class KioskApp {
@@ -203,12 +203,5 @@ public class KioskApp {
 
         productEdit.addProduct(addmenu, name, description, price);
 
-        //정상 추가확인용도
-        for (Menu i : productEdit.getmenuList().values()) {
-            System.out.print(i.getName()+" ");
-        }
-        for (Product i : productEdit.getProductList().values()) {
-            System.out.print(i.getName()+" ");
-        }
     }
 }
