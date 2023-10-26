@@ -205,11 +205,9 @@ public class OrderProcess {
 
             case "finish":
                 for (String name : getAllOrderMap().keySet()) {
-                    while(allOrderMap.size()<=3){
-                        System.out.println(name + "           | ₩ " + getAllOrderMap().get(name));
-                    }
-
-                }break;
+                    System.out.println(name + "           | ₩ " + getAllOrderMap().get(name));
+                }
+                break;
 
 
           /*  case "finish":
