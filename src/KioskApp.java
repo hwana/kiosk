@@ -1,3 +1,4 @@
+import java.security.Key;
 import java.util.*;
 
 public class KioskApp {
@@ -46,6 +47,8 @@ public class KioskApp {
 //        allMenuMap.put(2, sideList);
 //        allMenuMap.put(3, drinkList);
 //        allMenuMap.put(4, mealKitList);
+//        productEdit.addProduct("떡볶이", "김치떡볶이", "김치로만든 떡볶이", 10000);
+//        productEdit.addProduct("햄버거", "불고기햄버거", "햄버거임", 8000);
 
     }
 
@@ -79,7 +82,7 @@ public class KioskApp {
             default: // 메뉴 선택
                 String productNum = printMenu(menuNum); // 입력받은 숫자에 따른 상세 메뉴 출력
                 Parser.parseNum(productNum, NUMBER_REG);
-                Product selectProduct = productEdit.getallMenuMap().get(Integer.parseInt(menuNum)).get(Integer.parseInt(productNum) - 1); //선택한 상품에 대한 정보 가져오기
+                Product selectProduct = productEdit.getProductList().get(Integer.parseInt(menuNum) +"#"+(Integer.parseInt(productNum))); //선택한 상품에 대한 정보 가져오기
 
                 orderProcess.addProduct(selectProduct); // 카트에 담기
         }
@@ -96,7 +99,7 @@ public class KioskApp {
 
         System.out.println("[ 🔥 YUPDDUCK MENU 🔥 ]");
         int index = 1;
-        for (Menu m : productEdit.getmenuList()) {
+        for (Menu m : productEdit.getmenuList().values()) {
             System.out.print(index++ + ". ");
             m.print();
         }
@@ -131,10 +134,14 @@ public class KioskApp {
         System.out.println();
 
         System.out.println("[ 🔥 " + menu + " MENU 🔥 ]");
-        //메뉴 리스트 출력
-        for (Product p : productEdit.getallMenuMap().get(Integer.parseInt(selectNum))) {
-            System.out.print(index++ + ". ");
-            p.print();
+//        메뉴 리스트 출력
+//         해당 메뉴ID가 일치하는 상품만 출력
+        for (String key : productEdit.getProductList().keySet()) {
+            if (Objects.equals(key.substring(0, key.indexOf("#")) , selectNum)) {
+
+                System.out.print(index++ + ". ");
+                productEdit.getProductList().get(key).print();
+            }
         }
         System.out.println();
 
@@ -187,9 +194,9 @@ public class KioskApp {
         String addmenu = sc.nextLine();
         String name = sc.nextLine();
         String description = sc.nextLine();
-        int price = Integer.parseInt(sc.nextLine());
+        int price = sc.nextInt();
 
-//        productEdit.addProduct(addmenu, new Product(name, description, price));
+        productEdit.addProduct(addmenu, name, description, price);
 
 
 
