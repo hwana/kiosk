@@ -101,7 +101,7 @@ public class OrderProcess {
     public String waitingCheck() throws Exception {
         System.out.println("[ 대기 중인 주문 목록 ]");
         if (order.getOrderMap().isEmpty()) {
-            System.out.println("대기중인 상품이 없습니다.");
+            System.out.println("대기중인 상품이 없습니다.❌");
             return "";
         }
         return printQuestion("waiting");
@@ -110,7 +110,7 @@ public class OrderProcess {
     public String finishCheck() throws Exception {
         System.out.println("[ 최근 주문 완료 목록 ]");
         if (getAllOrderMap().isEmpty()) {
-            System.out.println("주문 완료된 상품이 없습니다.");
+            System.out.println("주문 완료된 상품이 없습니다.❌");
             return "";
         }
         return printQuestion("finish");

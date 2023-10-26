@@ -56,9 +56,11 @@ public class KioskApp {
 
         switch (menuNum) {
             case "7": // 주문 확인
-
-                orderProcess.finishCheck();
+                System.out.println("💸 주문 내역 확인 💸");
+                System.out.println();
+                orderProcess.finishCheck();  // 완료 된 주문 전체 출력
                 orderProcess.waitingCheck(); // 대기 중인 주문 전체 출력
+                System.out.println();
 
                 break;
 
@@ -116,7 +118,7 @@ public class KioskApp {
         System.out.print(index++ + ". ");
         System.out.printf("%-15s | %s%n", "Cancel", "진행중인 주문을 취소합니다.❌");
         System.out.print(index + ". ");
-        System.out.printf("%-15s | %s%n", "Cancel", "주문 내역을 확인합니다.✔");
+        System.out.printf("%-15s | %s%n", "Check", "주문 내역을 확인합니다.✔");
         System.out.println();
 
         Scanner sc = new Scanner(System.in);
