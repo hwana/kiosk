@@ -82,7 +82,7 @@ public class KioskApp {
             default: // 메뉴 선택
                 String productNum = printMenu(menuNum); // 입력받은 숫자에 따른 상세 메뉴 출력
                 Parser.parseNum(productNum, NUMBER_REG);
-                Product selectProduct = productEdit.getProductList().get(Integer.parseInt(menuNum) + "#" + (Integer.parseInt(productNum))); //선택한 상품에 대한 정보 가져오기
+                Product selectProduct = productEdit.getProductList().get(menuNum + "#" +productNum); //선택한 상품에 대한 정보 가져오기
 
                 orderProcess.addProduct(selectProduct); // 카트에 담기
         }
