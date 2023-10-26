@@ -209,6 +209,7 @@ public class KioskApp {
         }
         for (Product i : productEdit.getProductList().values()) {
             System.out.print(i.getName()+" ");
+            System.out.println("test");
         }
     }
 }
