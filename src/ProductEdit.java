@@ -39,11 +39,11 @@ public class ProductEdit {
         productList.put("4#1", new Product("오리지널맛", "엽떡을 즐길줄 안다면 역시 오리지널!", 15000));
         productList.put("4#2", new Product("착한맛", "아이들이 먹기 좋아요", 15000));
 
-        addProduct("Tteokbokki","엽떡", "엽떡이다", 8000);
-        addProduct("햄버거","불고기햄버거", "맛있는햄버거", 7000);
-
 
         // test code
+
+//        addProduct("Tteokbokki","엽떡", "엽떡이다", 8000);
+//        addProduct("햄버거","불고기햄버거", "맛있는햄버거", 7000);
 //        for (Menu i : menuList.values()) {
 //            System.out.print(i.getName()+" ");
 //        }
