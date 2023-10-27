@@ -2,15 +2,14 @@ import java.util.*;
 
 public class KioskApp {
 
-    private static final String NUMBER_REG = "^[0-6]*$";
+
+    private static final String NUMBER_REG = "^[0-7]*$";
     OrderProcess orderProcess = new OrderProcess();
     ProductEdit productEdit = new ProductEdit();
 
 
     public KioskApp() {
-
         productEdit.initProduct();  // 메뉴 초기화
-
 
     }
 
@@ -21,6 +20,16 @@ public class KioskApp {
         Parser.parseNum(menuNum, NUMBER_REG);
 
         switch (menuNum) {
+            case "7": // 주문 확인
+                System.out.println("💸 주문 내역 확인 💸");
+                System.out.println();
+                System.out.println("[ 주문 완료 상품 목록 ]");
+                doneCheck(orderProcess.getDoneList());
+                System.out.println("[ 대기 중인 주문 목록 ]");
+                orderCheck(orderProcess.getWaitingList());
+                System.out.println();
+
+                break;
             case "6": // 주문 취소
                 orderProcess.cancelOrder();
                 break;
@@ -117,8 +126,10 @@ public class KioskApp {
         System.out.println("[ 💛 ORDER MENU 💛 ]");
         System.out.print(index++ + ". ");
         System.out.printf("%-15s | %s%n", "Order", "장바구니를 확인 후 주문합니다.⭕");
-        System.out.print(index + ". ");
+        System.out.print(index++ + ". ");
         System.out.printf("%-15s | %s%n", "Cancel", "진행중인 주문을 취소합니다.❌");
+        System.out.print(index + ". ");
+        System.out.printf("%-15s | %s%n", "Check", "주문 내역을 확인합니다.✔");
         System.out.println();
 
         Scanner sc = new Scanner(System.in);
@@ -216,6 +227,52 @@ public class KioskApp {
                 System.out.println("6. 완료 주문 일시 : " + doneTime);
             }
         }
+    }
+
+    public void orderCheck(List<Order> orderList){
+        for (int i = 0; i < orderList.size(); i++) {
+            Map<Product, Integer> orderMap = orderList.get(i).getOrderMap();
+            for (Product product : orderMap.keySet()) {
+                System.out.printf("%-15s | ₩ %s | %s%n", product.getName(), product.getPrice(), orderMap.get(product) + "개");
+            }
+        }
+    }
+
+    public void doneCheck(List<Order> doneList){
+        // doneList.get(doneList.size()-1); // 가장 최신 데이터
+        if (doneList.size()<4){
+            for (int i = 0; i < doneList.size(); i++) {
+                Map<Product, Integer> orderMap = doneList.get(i).getOrderMap();
+                for (Product product : orderMap.keySet()) {
+                    System.out.printf("%-15s | ₩ %s | %s%n", product.getName(), product.getPrice(), orderMap.get(product) + "개");
+                }
+            }
+        }else {
+            for (int i = doneList.size()-3 ; i < doneList.size(); i++) {
+                Map<Product, Integer> orderMap = doneList.get(i).getOrderMap();
+                for (Product product : orderMap.keySet()) {
+                    System.out.printf("%-15s | ₩ %s | %s%n", product.getName(), product.getPrice(), orderMap.get(product) + "개");
+                }
+            }
+        }
+
+    }
+
+ /*   List<Order> doneList = new ArrayList<>();
+    List<Integer> doneIndexList = new ArrayList<>();
+        int index = 0;
+
+        for(Order n : doneList){
+            if(n.intNum==3){ // Order( ? , ? , intNum)
+                doneIndexList.add(index);
+        } index++;
+        }
+        */
+
+
+    public void doOrder(){
+
+
     }
 
     /**
