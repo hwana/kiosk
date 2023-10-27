@@ -1,6 +1,13 @@
+
+
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Scanner;
+
 
 public class OrderProcess {
 
@@ -215,4 +222,49 @@ public class OrderProcess {
         doneList.add(waitingList.get(index));
         waitingList.remove(index);
     }
+
+
+
+
+
+
+
+
+        public void toppingOrder (Product selectProduct, ProductEdit productEdit) throws Exception {
+
+            selectProduct.print();
+            System.out.println("토핑을 추가 하시겠습니까?");
+            System.out.println("1. 확인      2. 취소");
+
+            Scanner sc = new Scanner(System.in);
+            String check = sc.nextLine();
+            Parser.parseNum(check, YES_OR_NO);
+
+            Product addToppingProdcut = selectProduct;
+
+            if (Objects.equals(check,"1")) {
+                int index = 1;
+                System.out.println("[ Topping Menu ]");
+                System.out.println("아래 메뉴판을 보시고 토핑을 골라 입력해주세요.");
+                for (Product topping : productEdit.getToppingList()) {             //토핑 목록 출력
+                    System.out.print(index++ + ". ");
+                    topping.print();
+                }
+
+                int selectTopping = sc.nextInt();
+                System.out.println();
+
+                addToppingProdcut = new Product(productEdit.addToppingProductname(addToppingProdcut, productEdit.getToppingList().get(selectTopping - 1)),
+                        selectProduct.getDescription(),
+                        productEdit.addToppingProductprice(addToppingProdcut, productEdit.getToppingList().get(selectTopping - 1)));
+
+
+                productEdit.getToppingList().get(selectTopping - 1).print();
+                System.out.println("토핑이 추가되었습니다.");
+                System.out.println();
+
+            }
+
+            addProduct(addToppingProdcut);
+        }
 }
