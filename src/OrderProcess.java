@@ -1,17 +1,25 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class OrderProcess {
 
-    Order order = new Order();
     private static final String YES_OR_NO = "^[1-2]*$";
+    Cart cart = new Cart();
 
     //전체 주문 리스트
     private Map<String, Integer> allOrderMap = new HashMap<>();
 
+    //대기 주문 리스트
+    private List<Order> waitingList = new ArrayList<>();
+
+    //완료 주문 리스트
+    private List<Order> doneList = new ArrayList<>();
+
     //전체 판매 금액
     private int allTotalPrice;
+
+    private int waitingNumber = 1;
 
     public Map<String, Integer> getAllOrderMap() {
         return allOrderMap;
@@ -25,6 +33,14 @@ public class OrderProcess {
         this.allTotalPrice += totalPrice;
     }
 
+    public List<Order> getWaitingList() {
+        return waitingList;
+    }
+
+    public List<Order> getDoneList() {
+        return doneList;
+    }
+
     /**
      * 장바구니 담기
      *
@@ -35,41 +51,12 @@ public class OrderProcess {
         String addProduct = printQuestion("addProduct");    // 위 메뉴를 장바구니에 추가하시겠습니까?
 
         if ("1".equals(addProduct)) {
-            String writeRequest = printQuestion("writeRequest");
-
-            //요청 사항 입력 여부 확인
-            if ("1".equals(writeRequest)) {
-                //요청사항이 조건에 맞을 때까지
-                while (true) {
-                    System.out.println("요청 사항을 20자 이하로 입력해 주세요.");
-                    Scanner sc = new Scanner(System.in);
-                    String request = sc.nextLine();
-
-                    if (checkRequestLength(request)) {
-                        order.setRequest(request);
-                        break;
-                    }
-                }
-            }
-
-            //주문 목록에 상품 담기
-            order.getOrderMap().put(product, order.getOrderMap().getOrDefault(product, 0) + 1);
-            //주문 총 금액 더하기
-            order.setTotalPrice(product.getPrice());
+            cart.getCartMap().put(product, cart.getCartMap().getOrDefault(product, 0) + 1);
+            cart.setTotalPrice(product.getPrice());
             System.out.println("🛒 " + product.getName() + "가 장바구니에 추가되었습니다. 🛒");
         } else {
             System.out.println("❗ 취소되었습니다. ❗");
         }
-    }
-
-    /**
-     * 요청사항 길이 확인
-     *
-     * @param request : 입력 받은 요청 사항
-     * @return : true : 조건 충족, false : 조건 불충족
-     */
-    public boolean checkRequestLength(String request) {
-        return request.length() <= 20;
     }
 
     /**
@@ -79,7 +66,7 @@ public class OrderProcess {
         String result = printQuestion("cancelOrder");   // 진행중이던 주문을 취소하시겠습니까?
 
         if ("1".equals(result)) {
-            resetOrder();
+            resetCart();
             System.out.println("진행중이던 주문이 취소되었습니다.");
         }
     }
@@ -90,7 +77,7 @@ public class OrderProcess {
      * @return : (1) 확인 / (2) 취소
      */
     public String orderCheck() throws Exception {
-        if (order.getOrderMap().isEmpty()) {
+        if (cart.getCartMap().isEmpty()) {
             System.out.println("장바구니에 담긴 상품이 없습니다.");
             return "";
         }
@@ -98,53 +85,59 @@ public class OrderProcess {
         return printQuestion("printOrder"); // 아래와 같이 주문하시겠습니까?
     }
 
-    public String waitingCheck() throws Exception {
-        System.out.println("[ 대기 중인 주문 목록 ]");
-        if (order.getOrderMap().isEmpty()) {
-            System.out.println("대기중인 상품이 없습니다.❌");
-            return "";
-        }
-        return printQuestion("waiting");
-    }
+    /**
+     * 요청사항 검증
+     *
+     * @return
+     */
+    public String verifiedRequest() {
+        String request;
+        Scanner sc = new Scanner(System.in);
+        do {
+            System.out.println("요청 사항을 20자 이하로 입력해 주세요.");
+            request = sc.nextLine();
+        } while (request.length() > 20);
 
-    public String finishCheck() throws Exception {
-        System.out.println("[ 최근 주문 완료 목록 ]");
-        if (getAllOrderMap().isEmpty()) {
-            System.out.println("주문 완료된 상품이 없습니다.❌");
-            return "";
-        }
-        return printQuestion("finish");
+        return request;
     }
 
     /**
      * 주문 성공
      */
-    public void orderSuccess() {
+    public void orderSuccess() throws Exception {
 
-        for (Product product : order.getOrderMap().keySet()) {
+        String writeRequest = printQuestion("writeRequest");
+        String request = "";
+        //요청 사항 입력 여부 확인
+        if ("1".equals(writeRequest)) {
+            request = verifiedRequest();
+        }
+
+        for (Product product : cart.getCartMap().keySet()) {
             // 전체 주문 목록에 사용자가 현재 주문한 목록 담기
-            allOrderMap.put(product.getName(), allOrderMap.getOrDefault(product.getName(), 0) + product.getPrice() * order.getOrderMap().get(product));
+            allOrderMap.put(product.getName(), allOrderMap.getOrDefault(product.getName(), 0) + product.getPrice() * cart.getCartMap().get(product));
         }
 
         // 전체 총 금액에 사용자가 현재 주문한 총 금액 담기
-        setAllTotalPrice(order.getTotalPrice());
-        //대기번호 생성
-        int waitingNum = order.getWaitingNumber();
+        setAllTotalPrice(cart.getTotalPrice());
+
+        Order order = new Order(new HashMap<>(cart.getCartMap()), cart.getTotalPrice(), request, waitingNumber, makeISO8601Date());
+        waitingList.add(order);
 
         System.out.println("주문이 완료되었습니다.");
-        System.out.println("대기번호는 [" + waitingNum + " ]번 입니다.");
+        System.out.println("대기번호는 [ " + waitingNumber++ + " ]번 입니다.");
         System.out.println("(3초 후 메뉴판으로 돌아갑니다.)");
 
-        //다음 주문을 위한 주문번호 세팅과 장바구니 초기화
-        resetOrder();
+        //다음 주문을 위한 장바구니 초기화
+        resetCart();
     }
 
     /**
-     * 주문 초기화
+     * 장바구니 초기화
      */
-    public void resetOrder() {
-        order.getOrderMap().clear();    //  장바구니 비우기
-        order.clearTotalPrice();        //  해당 주문 총 금액 초기화
+    public void resetCart() {
+        cart.clearCartMap();
+        cart.clearTotalPrice();
     }
 
     /**
@@ -157,8 +150,6 @@ public class OrderProcess {
 
         Scanner sc = new Scanner(System.in);
         String result = "";
-//장바구니에 동일한 품목이 2개이상일때만 개수 표현을 하기 위해서 최대값을 구함
-        int maxCount = order.getOrderMap().values().stream().max(Integer::compareTo).orElse(1);
 
         switch (type) {
             case "writeRequest": //요청사항 작성
@@ -180,38 +171,48 @@ public class OrderProcess {
                 System.out.println("아래와 같이 주문하시겠습니까?");
                 System.out.println("[ Orders ]");
 
-                for (Product product : order.getOrderMap().keySet()) {
+                //장바구니에 동일한 품목이 2개이상일때만 개수 표현을 하기 위해서 최대값을 구함
+                int maxCount = cart.getCartMap().values().stream().max(Integer::compareTo).orElse(1);
+
+                for (Product product : cart.getCartMap().keySet()) {
                     //장바구니에 각 품목이 한개씩만 담겼다면
                     if (maxCount == 1) {
                         product.print();    //개수 출력하지 않음
                     } else {
-                        product.print(order.getOrderMap().get(product));  //1개가 아니라면 개수 출력
+                        product.print(cart.getCartMap().get(product));  //1개가 아니라면 개수 출력
                     }
                 }
-                System.out.println("[ 주문 요청사항 ]");
-                System.out.println(order.getRequest());
                 System.out.println("[ Total Price ]");
-                System.out.println(order.getTotalPrice());
+                System.out.println(cart.getTotalPrice());
 
                 System.out.println("1. 주문     2. 메뉴판");
                 result = sc.nextLine();
-
-            case "waiting":
-                for (Product product : order.getOrderMap().keySet()) {
-                    if (maxCount == 1) {
-                        product.print();
-                    } else {
-                        product.print(order.getOrderMap().get(product));
-                    }
-                }break;
-
-            case "finish":
-                for (String name : getAllOrderMap().keySet()) {
-                    System.out.println(name + "           | ₩ " + getAllOrderMap().get(name));
-                }
-                break;
         }
         Parser.parseNum(result, YES_OR_NO);
         return result;
+    }
+
+
+    /**
+     * ISO형식으로 일자, 시간 형식 변경
+     *
+     * @return
+     */
+    public String makeISO8601Date() {
+        ZonedDateTime currentDateTime = ZonedDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        return currentDateTime.format(formatter);
+    }
+
+    /**
+     * 주문 완료 처리
+     *
+     * @param result
+     */
+    public void completeProcess(String result) {
+        int index = Integer.parseInt(result) - 1;
+        waitingList.get(index).setDoneTime(makeISO8601Date());
+        doneList.add(waitingList.get(index));
+        waitingList.remove(index);
     }
 }

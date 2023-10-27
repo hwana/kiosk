@@ -1,4 +1,3 @@
-import java.util.HashMap;
 import java.util.Map;
 
 public class Order {
@@ -10,16 +9,17 @@ public class Order {
     private String request;
     // 대기 번호
     private int waitingNumber;
-    // 처리 상태
-    // true : 주문 처리 완료
-    // false : 주문 대기 상태
-    private boolean status;
+    //주문 시간
+    private String orderTime;
+    //주문 완료 처리 시간
+    private String doneTime;
 
-    public Order() {
-        this.orderMap = new HashMap<>();
-        this.totalPrice = 0;
-        this.waitingNumber = 0;
-        this.status = false;
+    public Order(Map<Product, Integer> orderMap, int totalPrice, String request, int waitingNumber, String orderTime) {
+        this.orderMap = orderMap;
+        this.totalPrice = totalPrice;
+        this.request = request;
+        this.waitingNumber = waitingNumber;
+        this.orderTime = orderTime;
     }
 
     public Map<Product, Integer> getOrderMap() {
@@ -30,40 +30,23 @@ public class Order {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice += totalPrice;
-    }
-
     public String getRequest() {
         return request;
     }
 
-    public void setRequest(String request) {
-        this.request = request;
-    }
-
     public int getWaitingNumber() {
-        waitingNumber++;
         return waitingNumber;
     }
 
-    public boolean isStatus() {
-        return status;
+    public String getOrderTime() {
+        return orderTime;
     }
 
-    /**
-     * 주문 완료 처리
-     *
-     * @param status : 현재 주문 처리 상태
-     */
-    public void switchStatus(boolean status) {
-        this.status = !status;
+    public String getDoneTime() {
+        return doneTime;
     }
 
-    /**
-     * 주문 총 금액 초기화
-     */
-    public void clearTotalPrice() {
-        this.totalPrice = 0;
+    public void setDoneTime(String doneTime) {
+        this.doneTime = doneTime;
     }
 }
