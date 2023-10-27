@@ -10,7 +10,7 @@ public class ProductEdit {
 
     private Map<String, Product> productList = new HashMap<>();
 
-
+    private List<Product> toppingList = new ArrayList<>();
     // 메뉴id#상품id
     public void initProduct() {
 
@@ -37,9 +37,12 @@ public class ProductEdit {
         productList.put("4#1", new Product("오리지널맛", "엽떡을 즐길줄 안다면 역시 오리지널!", 15000));
         productList.put("4#2", new Product("착한맛", "아이들이 먹기 좋아요", 15000));
 
+        toppingList.add(new Product("김말이", "바삭바삭한 김말이튀김", 1000));
+        toppingList.add(new Product("치즈", "엽떡의 시그니처 치즈", 3000));
+        toppingList.add(new Product("퐁당치즈만두", "엽떡소스에 푸욱~ 달달한 치즈! 환상의 조합", 2000));
+        toppingList.add(new Product("계란", "수저로 으깨서 엽떡 소스에 섞어먹기!", 1500));
+
     }
-
-
 
     public Map<String, Product> getProductList() {
         return productList;
@@ -49,6 +52,20 @@ public class ProductEdit {
         return menuList;
     }
 
+    public String addToppingProductname(Product selectProduct,Product topping){                      //떡볶이 상품에 토핑추가 로직
+        String name = selectProduct.getName() + "(" +topping.getName() + ")";
+        return name;
+    }
+
+    public int addToppingProductprice(Product selectProduct,Product topping){                      //떡볶이 상품에 토핑추가 로직
+        int price = selectProduct.getPrice() + topping.getPrice();
+        return price;
+    }
+
+
+    public List <Product> getToppingList(){
+        return toppingList;
+    }
 
 
     public void addProduct(String addmenu, String name, String description, int price) {
@@ -83,9 +100,7 @@ public class ProductEdit {
             productList.put((menuList.size() + 1) + "#1", new Product(name, description, price));
             menuList.put(Integer.toString((menuList.size()+1)), new Menu(addmenu, ""));        //새로운 상품 추가시 메뉴설명을 추가하지않았기때문에  공란처리함
 
-
         }
-
     }
 
     public void deleteProduct(String id){
@@ -106,7 +121,5 @@ public class ProductEdit {
             menuList.remove(idKey);
         }
 
-
     }
-
 }
