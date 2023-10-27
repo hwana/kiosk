@@ -1,4 +1,3 @@
-
 import java.util.*;
 
 
@@ -40,16 +39,13 @@ public class ProductEdit {
     }
 
 
-
     public Map<String, Product> getProductList() {
         return productList;
     }
 
-    public Map<String, Menu> getmenuList() {
+    public Map<String, Menu> getMenuList() {
         return menuList;
     }
-
-
 
     public void addProduct(String addmenu, String name, String description, int price) {
         Menu setValue = null;
@@ -60,7 +56,7 @@ public class ProductEdit {
                 setValue = value;
             }
         }
-        if (setValue!=null) {
+        if (setValue != null) {
             for (String key : menuList.keySet()) {
                 if (Objects.equals(menuList.get(key), setValue)) {   /// 메뉴의 value로 key값(ID) 조회 (1,2,3,4....)
                     setKey = key;
@@ -77,18 +73,18 @@ public class ProductEdit {
 
             Integer maxKeys = Collections.max(keys);  // 상품ID중 최대값 구하기
             keys.clear();
-            productList.put(setKey + "#" + (maxKeys+1), new Product(name, description, price));
+            productList.put(setKey + "#" + (maxKeys + 1), new Product(name, description, price));
 
         } else {   //새로운 메뉴 추가시 메뉴리스트와 상품생성
             productList.put((menuList.size() + 1) + "#1", new Product(name, description, price));
-            menuList.put(Integer.toString((menuList.size()+1)), new Menu(addmenu, ""));        //새로운 상품 추가시 메뉴설명을 추가하지않았기때문에  공란처리함
+            menuList.put(Integer.toString((menuList.size() + 1)), new Menu(addmenu, ""));        //새로운 상품 추가시 메뉴설명을 추가하지않았기때문에  공란처리함
 
 
         }
 
     }
 
-    public void deleteProduct(String id){
+    public void deleteProduct(String id) {
         productList.remove(id);
         String idKey = id.substring(0, id.indexOf("#"));          //삭제 상품의 메뉴ID
         Boolean exist = false;
@@ -102,11 +98,8 @@ public class ProductEdit {
             }
         }
 
-        if (exist == false){                               // 삭제상품과 전 상품의 메뉴ID가 같은게없으면 메뉴리스트삭제
+        if (!exist) {    // 삭제상품과 전 상품의 메뉴ID가 같은게없으면 메뉴리스트삭제
             menuList.remove(idKey);
         }
-
-
     }
-
 }
