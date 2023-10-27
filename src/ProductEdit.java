@@ -4,8 +4,6 @@ import java.util.*;
 
 public class ProductEdit {
 
-    private String setKey;
-
     private List<Integer> keys = new ArrayList<>();
 
     private Map<String, Menu> menuList = new HashMap<>();
@@ -15,9 +13,11 @@ public class ProductEdit {
 
     // 메뉴id#상품id
     public void initProduct() {
+
         ///  ID범례: 메뉴는 문자열 1,2,3,.... 순으로 ID부여,  상품은 메뉴ID#1,2,3.....순으로 부여
+
         menuList.put("1", new Menu("떡볶이", "계속 생각나는 매운맛! 엽기떡볶이🥵"));
-        menuList.put("2", new Menu("사이드", "엽떡과 같이 먹으면 더 맛있어요🍙"));                                 //이름을 키값으로
+        menuList.put("2", new Menu("사이드", "엽떡과 같이 먹으면 더 맛있어요🍙"));
         menuList.put("3", new Menu("드링크", "매움을 달래주기 위한 음료🧃"));
         menuList.put("4", new Menu("밀키트", "어디서든 엽떡을 즐겨보세요🌳"));
 
@@ -37,50 +37,6 @@ public class ProductEdit {
         productList.put("4#1", new Product("오리지널맛", "엽떡을 즐길줄 안다면 역시 오리지널!", 15000));
         productList.put("4#2", new Product("착한맛", "아이들이 먹기 좋아요", 15000));
 
-
-        // test code
-
-//        addProduct("떡볶이","엽떡", "엽떡이다", 8000);
-//        addProduct("햄버거","불고기햄버거", "맛있는햄버거", 7000);
-//        for (Menu i : menuList.values()) {
-//            System.out.print(i.getName()+" ");
-//        }
-//        System.out.println();
-//
-//        for (Product i :productList.values()) {
-//            System.out.print(i.getName() + " ");
-//        }
-//        System.out.println();
-//
-//
-//        System.out.println(productList.size());
-//        System.out.println(menuList.size());
-//
-//        System.out.println("--------------------------------------");
-//
-//
-//        deleteProduct("1#1");
-//
-//        for (Menu i : menuList.values()) {
-//            System.out.print(i.getName()+" ");
-//        }
-//        System.out.println();
-//        for (Product i :productList.values()) {
-//            System.out.print(i.getName() + " ");
-//        }
-//        System.out.println();
-//
-//        System.out.println("--------------------------------------");
-//        deleteProduct("5#1");
-//
-//        for (Menu i : menuList.values()) {
-//            System.out.print(i.getName()+" ");
-//        }
-//        System.out.println();
-//        for (Product i :productList.values()) {
-//            System.out.print(i.getName() + " ");
-//        }
-
     }
 
 
@@ -97,6 +53,7 @@ public class ProductEdit {
 
     public void addProduct(String addmenu, String name, String description, int price) {
         Menu setValue = null;
+        String setKey = null;
 
         for (Menu value : menuList.values()) {
             if (Objects.equals(addmenu, value.getName())) {     ///추가 메뉴의 이름이 기존 메뉴목록의 메뉴와 일치된 값 저장
@@ -137,9 +94,9 @@ public class ProductEdit {
         Boolean exist = false;
 
         for (String K : productList.keySet()) {
-            String matchKey = K.substring(0, K.indexOf("#"));     // 전 상품의 메뉴ID
+            String matchKey = K.substring(0, K.indexOf("#"));
 
-            if (Objects.equals(idKey, matchKey)) {
+            if (Objects.equals(idKey, matchKey)) {               //삭제후 남은 상품들중에 삭제한 상품의 메뉴와 일치하는 메뉴를 가지고있는 상품이 있는지 조회
                 exist = true;
                 break;
             }
