@@ -2,17 +2,13 @@ import java.util.*;
 
 public class KioskApp {
 
-
     private static final String NUMBER_REG = "^[0-7]*$";
     OrderProcess orderProcess = new OrderProcess();
     ProductEdit productEdit = new ProductEdit();
 
-
     public KioskApp() {
         productEdit.initProduct();  // 메뉴 초기화
-
     }
-
 
     public void kiosk() throws Exception {
 
@@ -28,7 +24,6 @@ public class KioskApp {
                 System.out.println("[ 대기 중인 주문 목록 ]");
                 orderCheck(orderProcess.getWaitingList());
                 System.out.println();
-
                 break;
             case "6": // 주문 취소
                 orderProcess.cancelOrder();
@@ -49,7 +44,6 @@ public class KioskApp {
                 }
                 break;
             case "0":
-
                 String adminNum = printAdmin();// 관리자 모드
                 switch (adminNum) {
                     case "1":
@@ -64,9 +58,6 @@ public class KioskApp {
                     case "4":
                         break;
                     case "5":
-                        printOrderDoneProcess(orderProcess.getWaitingList());
-                        break;
-                    case "6":
                         printTotal();
                         break;
                 }
@@ -84,9 +75,8 @@ public class KioskApp {
                 Product selectProduct = productEdit.getProductList().get(menuNum + "#" + productNum); //선택한 상품에 대한 정보 가져오기
 
                 if (menuNum.equals("1")) {
-                   orderProcess.toppingOrder(selectProduct, productEdit);
-                }
-                else {
+                    orderProcess.toppingOrder(selectProduct, productEdit);
+                } else {
                     orderProcess.addProduct(selectProduct); // 카트에 담기
                 }
         }
@@ -99,7 +89,6 @@ public class KioskApp {
      */
     private void printOrderDoneProcess(List<Order> waitingList) {
         System.out.println("완료 처리 할 대기 주문을 선택하세요.");
-        printOrderList(waitingList);
         Scanner sc = new Scanner(System.in);
         String result = sc.nextLine();
         orderProcess.completeProcess(result);
@@ -152,7 +141,7 @@ public class KioskApp {
 //         해당 메뉴ID가 일치하는 상품만 출력
         List<String> keyset = new ArrayList<>(productEdit.getProductList().keySet());
         Collections.sort(keyset);                                                              //keyset 오름차순 정렬
-        for (String key :  keyset) {
+        for (String key : keyset) {
             if (Objects.equals(key.substring(0, key.indexOf("#")), selectNum)) {
 
                 System.out.print(index++ + ". ");
@@ -176,8 +165,7 @@ public class KioskApp {
         System.out.println("2. 완료 주문 목록");
         System.out.println("3. 상품 생성");
         System.out.println("4. 상품 삭제");
-        System.out.println("5. 주문 완료 처리");
-        System.out.println("6. 총 주문 조회");
+        System.out.println("5. 총 주문 조회");
 
         Scanner sc = new Scanner(System.in);
         return sc.nextLine();
@@ -225,11 +213,13 @@ public class KioskApp {
 
             if (doneTime != null) {
                 System.out.println("6. 완료 주문 일시 : " + doneTime);
+            } else {
+                printOrderDoneProcess(orderList);
             }
         }
     }
 
-    public void orderCheck(List<Order> orderList){
+    public void orderCheck(List<Order> orderList) {
         for (int i = 0; i < orderList.size(); i++) {
             Map<Product, Integer> orderMap = orderList.get(i).getOrderMap();
             for (Product product : orderMap.keySet()) {
@@ -238,40 +228,23 @@ public class KioskApp {
         }
     }
 
-    public void doneCheck(List<Order> doneList){
+    public void doneCheck(List<Order> doneList) {
         // doneList.get(doneList.size()-1); // 가장 최신 데이터
-        if (doneList.size()<4){
+        if (doneList.size() < 4) {
             for (int i = 0; i < doneList.size(); i++) {
                 Map<Product, Integer> orderMap = doneList.get(i).getOrderMap();
                 for (Product product : orderMap.keySet()) {
                     System.out.printf("%-15s | ₩ %s | %s%n", product.getName(), product.getPrice(), orderMap.get(product) + "개");
                 }
             }
-        }else {
-            for (int i = doneList.size()-3 ; i < doneList.size(); i++) {
+        } else {
+            for (int i = doneList.size() - 3; i < doneList.size(); i++) {
                 Map<Product, Integer> orderMap = doneList.get(i).getOrderMap();
                 for (Product product : orderMap.keySet()) {
                     System.out.printf("%-15s | ₩ %s | %s%n", product.getName(), product.getPrice(), orderMap.get(product) + "개");
                 }
             }
         }
-
-    }
-
- /*   List<Order> doneList = new ArrayList<>();
-    List<Integer> doneIndexList = new ArrayList<>();
-        int index = 0;
-
-        for(Order n : doneList){
-            if(n.intNum==3){ // Order( ? , ? , intNum)
-                doneIndexList.add(index);
-        } index++;
-        }
-        */
-
-
-    public void doOrder(){
-
 
     }
 
