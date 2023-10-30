@@ -62,6 +62,7 @@ public class KioskApp {
                         printAddProduct();
                         break;
                     case "4":
+                        printDeleteProduct();
                         break;
                     case "5":
                         printOrderDoneProcess(orderProcess.getWaitingList());
@@ -155,7 +156,7 @@ public class KioskApp {
         for (String key :  keyset) {
             if (Objects.equals(key.substring(0, key.indexOf("#")), selectNum)) {
 
-                System.out.print(index++ + ". ");
+                System.out.print(key.substring(key.lastIndexOf("#")+1) + ". ");
                 productEdit.getProductList().get(key).print();
             }
         }
@@ -293,6 +294,30 @@ public class KioskApp {
         int price = sc.nextInt();
 
         productEdit.addProduct(addmenu, name, description, price);
+
+    }
+
+    public void printDeleteProduct() throws Exception {
+        // 상품 삭제 window
+        System.out.println("[상품 삭제]");
+        System.out.println("삭제하고자 하는 상품의 ID를 입력해주세요.");
+        System.out.println();
+
+        Scanner sc = new Scanner(System.in);
+        String deleteID = sc.nextLine();
+
+        System.out.print(productEdit.getProductList().get(deleteID).getName());
+        System.out.println(" 상품이 삭제됩니다. 진행하시겠습니까?");
+        System.out.println("1. 확인      2. 취소");
+
+        String check = sc.nextLine();
+        String checkReg = "^[1-2]*$";
+
+        Parser.parseNum(check, checkReg);
+        if (check.equals("1")){
+            productEdit.deleteProduct(deleteID);
+            System.out.println("상품이 삭제되었습니다.");
+        }
 
     }
 }
